@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useFundWallet, usePrivy, useWallets } from "@privy-io/react-auth";
 import { decodeFunctionResult, encodeFunctionData, parseEther } from "viem";
 
 const abi = [
@@ -40,6 +40,8 @@ export default function Home() {
   const disableLogout = !ready || (ready && !authenticated);
   
   const {ready: walletReady, wallets} = useWallets();
+  
+  const {fundWallet} = useFundWallet();
   
   const wallet = wallets[0]
   
@@ -117,6 +119,10 @@ export default function Home() {
     console.log("Value of x:", value);
   }
   
+  const fundWalletWithEther = async () => {
+    await fundWallet(wallet.address);
+  }
+  
   return (
     <div className={"flex flex-col items-center justify-center h-screen"}>
       <Button onClick={login} disabled={disableLogin}>Login</Button>
@@ -132,6 +138,8 @@ export default function Home() {
       <Button onClick={callSmartContract}>Set X to 10</Button>
       <br />
       <Button onClick={getValuesOfSmartContract}>Get X</Button>
+      <br />
+      <Button onClick={fundWalletWithEther}>Fund Wallet</Button>
     </div>
   );
 }
